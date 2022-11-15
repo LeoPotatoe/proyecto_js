@@ -21,7 +21,7 @@ function cuotaCalculo(){
 
 cuotaCalculo() */
 
-//SEGUNDA ENTREGA
+//SEGUNDA ENTREGA MODIFICADA
 
 class prestamo {
     constructor(monto, plazo, tasaAnual) {
@@ -31,21 +31,36 @@ class prestamo {
         this.año = 365;
     }
     cuota(){
-        this.cuota = (this.monto*(this.tasaAnual/12))/(1-(1+this.tasaAnual/12)**-this.plazo) 
+        this.cuota = (this.monto*(this.tasaAnual/12))/(1-(1+this.tasaAnual/12)**-this.plazo)
     }
 
 }
 
-let montoIngresado = prompt('Ingresa el monto solicitado');
-let plazoIngresado = prompt('Ingresa el plazo');
-let tasaIngresada = prompt('Ingresa la tasa anual');
-
-
 const prestamos = [];
 
-   prestamos.push(new prestamo (montoIngresado, plazoIngresado, tasaIngresada))
+let go = true;
+
+while (go){
+    
+    let montoIngresado = prompt("Ingresá el monto solicitado");
+    let plazoIngresado = prompt("Ingresá el plazo");
+    let tasaIngresada = prompt("Ingresá la tasa anual");
+    let salida = prompt("Para finalizar escriba X");
+
+    prestamos.push(new prestamo (montoIngresado, plazoIngresado, tasaIngresada, prestamo.cuota))
+    console.log(prestamos)
+
+    if(salida.toUpperCase() == "X"){
+        go = false;
+        break;
+    }
+   
+}
 
 prestamos.forEach(prestamo => {
     prestamo.cuota();
     alert('la cuota del prestamos es $ '+ prestamo.cuota)   
 });
+
+const filtro = prestamos.filter((elemento) => elemento.monto > 10000);
+console.log(filtro);
