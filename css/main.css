@@ -134,3 +134,28 @@
     .footer__contenedor .footer__contenedor-contenido .contenido p {
       color: #ffffff;
       margin: 0px; }
+
+.plazofijo {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  .plazofijo .plazofijo__titulo {
+    margin-top: 15px;
+    margin-bottom: 15px; }
+    .plazofijo .plazofijo__titulo h2 {
+      text-transform: uppercase; }
+
+.prespersonal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  .prespersonal .prespersonal__titulo {
+    margin-top: 15px;
+    margin-bottom: 15px; }
+    .prespersonal .prespersonal__titulo h2 {
+      text-transform: uppercase; }
+
+.confirmacion__lista {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }

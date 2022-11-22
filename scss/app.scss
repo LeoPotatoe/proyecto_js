@@ -165,3 +165,38 @@
         }
     }
 }
+
+//MAQUETEANDO PLAZO FIJO
+
+.plazofijo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .plazofijo__titulo{
+        margin-top: 15px;
+        margin-bottom: 15px;
+            h2{
+                text-transform: uppercase;
+            }
+    }
+}
+
+//MAQUETEANDO PRESTAMO PERSONALES
+
+.prespersonal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .prespersonal__titulo{
+        margin-top: 15px;
+        margin-bottom: 15px;
+            h2{
+                text-transform: uppercase;
+            }
+    }
+}
+.confirmacion__lista{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
