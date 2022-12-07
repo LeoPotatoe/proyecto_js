@@ -161,5 +161,70 @@
   align-items: center; }
   .confirmacion__lista h2 {
     margin-top: 20px; }
-  .confirmacion__lista .tabla tr th {
-    padding: 40px; }
+  .confirmacion__lista .tabla {
+    margin-bottom: 20px; }
+    .confirmacion__lista .tabla tr th {
+      padding: 25px;
+      border: 1px solid #bcbcbc; }
+    .confirmacion__lista .tabla #cuerpo {
+      border: 1px solid #bcbcbc;
+      justify-content: center; }
+
+#section {
+  display: flex;
+  justify-content: center; }
+  #section .oficial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+    width: 250px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #bcbcbc; }
+  #section .solidario {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+    width: 250px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #bcbcbc; }
+  #section .mep {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+    width: 250px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #bcbcbc; }
+  #section .ccl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+    width: 250px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #bcbcbc; }
+  #section .blue {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 10px;
+    width: 250px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #bcbcbc; }

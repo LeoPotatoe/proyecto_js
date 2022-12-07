@@ -236,7 +236,7 @@ const confirmacion = document.querySelector(".confirmacion");
 const datosForm = document.getElementById("prespersonal");
 
 function guardarPrestamoStorage(datos) {
-    localStorage.setItem('pp', JSON.stringify(datos));
+    localStorage.setItem("pp", JSON.stringify(datos));
 }
 
 function recuperarPrestamoStorage(key) {
@@ -244,11 +244,11 @@ function recuperarPrestamoStorage(key) {
 }
 
 calcular.addEventListener('click', () => {
-    const capital = document.getElementById("capital").value;
+    const monto = document.getElementById("monto").value;
     const plazo = document.getElementById("plazo").value;
     const tna = document.getElementById("tna").value;
 
-    const calcularCuota = new prestamo(capital, tna, plazo);
+    const calcularCuota = new prestamo(monto, tna, plazo);
     console.log(calcularCuota)
 
     calcularCuota.cuotaConIva()
@@ -265,11 +265,11 @@ reset.addEventListener('click', () => {
 })
 
 ultima.addEventListener('click', () => {
-    let datosGuardados = recuperarPrestamoStorage('pp');
+    let datosGuardados = recuperarPrestamoStorage("pp");
     console.log(datosGuardados);
 
     if (!datosGuardados) {
-        alert('No se encontraron simulaciones previas');
+        alert("No se encontraron simulaciones previas");
     } else {
         const calcularCuota = new prestamo (datosGuardados.monto, datosGuardados.tna, datosGuardados.plazo)
         calcularCuota.cuotaConIva()
