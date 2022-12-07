@@ -160,51 +160,70 @@ ultima.addEventListener('click', () => {
 const iva = 0.21;
 class prestamo {
     constructor(monto, tna, plazo) {
-        this.monto = parseInt(monto);
+        this.monto = parseFloat(monto);
         this.tna = parseFloat(tna / 100);
         this.plazo = parseInt(plazo);
-
+        this.interes = 0;
+        this.amortizacion = 0;
+        this.cuotaIva = 0;
+        this.impuesto = 0;
+        this.cuota = 0;
     }
-    caidaCuota() {
 
-        while (llenarTabla.firstChild) {
-            llenarTabla.removeChild(llenarTabla.firstChild);
+        cuotaConIva(){ 
+        this.cuotaIva = ((this.monto * (((this.tna / 12))+((this.tna / 12))*iva))  / (1 - (1 + ((this.tna / 12)+(this.tna / 12)*iva)) ** -this.plazo));
+    }
+
+        cuotaSinIva(){
+        this.cuota = ((this.monto * ((this.tna / 12))) / (1 - ((1 + this.tna / 12)) ** -this.plazo));
+    }
+
+        intereses(){
+        this.interes = (this.monto * (this.tna / 12));
+    }
+
+        impuestoIva(){
+        this.impuesto = (this.interes * iva);
+    }
+
+        amortizaciones(){
+        this.amortizacion = (this.cuotaIva - this.interes - this.impuesto);
+    }
+
+        saldo(){
+        this.monto = (this.monto - this.amortizacion);
+    }
+
+        caidaCuota(){
+            while (llenarTabla.firstChild) {
+                llenarTabla.removeChild(llenarTabla.firstChild);
         }
 
-        let fechas = [];
-        let fechaActual = Date.now();
-        let mes_actual = moment(fechaActual);
-        mes_actual.add(1, "month");
+            let fechas = [];
+            let fechaActual = Date.now();
+            let mes_actual = moment(fechaActual);
+            mes_actual.add(1, "month");
 
-        let interes = 0;
-        let amortizacion = 0;
-        let cuotaIva = 0;
-        let impuesto = 0;
-        let cuota = 0;
+            for (let i = 1; i <= this.plazo; i++) {
 
-        cuotaIva = ((this.monto * (((this.tna*(1+iva)) / 12))) / (1 - ((1 + (this.tna*(1+iva)) / 12)) ** -this.plazo));
-        cuota = ((this.monto * ((this.tna / 12))) / (1 - ((1 + this.tna / 12)) ** -this.plazo));
+                this.intereses();
+                this.impuestoIva();
+                this.amortizaciones();
+                this.saldo();
 
-        for (let i = 1; i <= this.plazo; i++) {
-
-            interes = (this.monto * (this.tna / 12));
-            impuesto = (interes * iva)
-            amortizacion = cuotaIva - interes - impuesto;
-            this.monto = parseFloat(this.monto - amortizacion);
-
-            fechas[i] = mes_actual.format('MM-YYYY');
+            fechas[i] = mes_actual.format("MM-YYYY");
             mes_actual.add(1, "month");
 
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td>${fechas[i]}</td>
-                <td>${cuotaIva.toFixed(2)}</td>
-                <td>${amortizacion.toFixed(2)}</td>
-                <td>${interes.toFixed(2)}</td>
-                <td>${impuesto.toFixed(2)}</td>
+                <td>${this.cuotaIva.toFixed(2)}</td>
+                <td>${this.amortizacion.toFixed(2)}</td>
+                <td>${this.interes.toFixed(2)}</td>
+                <td>${this.impuesto.toFixed(2)}</td>
                 <td>${this.monto.toFixed(2)}</td>
                 `;
-            llenarTabla.appendChild(fila)
+            llenarTabla.appendChild(fila)  
         }
     }
 }
@@ -216,83 +235,66 @@ const ultima = document.getElementById("ultima");
 const confirmacion = document.querySelector(".confirmacion");
 const datosForm = document.getElementById("prespersonal");
 
+function guardarPrestamoStorage(datos) {
+    localStorage.setItem('pp', JSON.stringify(datos));
+}
+
+function recuperarPrestamoStorage(key) {
+    return JSON.parse(localStorage.getItem(key));
+}
+
 calcular.addEventListener('click', () => {
-    const monto = document.getElementById("monto").value;
+    const capital = document.getElementById("capital").value;
     const plazo = document.getElementById("plazo").value;
     const tna = document.getElementById("tna").value;
 
-    const calcularCuota = new prestamo(monto, tna, plazo);
+    const calcularCuota = new prestamo(capital, tna, plazo);
     console.log(calcularCuota)
 
+    calcularCuota.cuotaConIva()
+    calcularCuota.cuotaSinIva()
     calcularCuota.caidaCuota()
-    datosForm.reset();
 
-    localStorage.setItem("pp", JSON.stringify(calcularCuota));
+    guardarPrestamoStorage(calcularCuota);
+    datosForm.reset();
+    
 })
 
 reset.addEventListener('click', () => {
-    document.getElementById("lista_tabla").innerHTML = '';
+    document.getElementById("cuerpo").innerHTML = '';
 })
 
 ultima.addEventListener('click', () => {
-    let datosGuardados = JSON.parse(localStorage.getItem("pp"));
-    const calcularCuota = new prestamo(datosGuardados.monto, datosGuardados.tna, datosGuardados.plazo)
-    /* console.log(calcularCuota); */
+    let datosGuardados = recuperarPrestamoStorage('pp');
+    console.log(datosGuardados);
 
     if (!datosGuardados) {
-        alert("No se encontraron simulaciones previas");
-    } else {
-        calcularCuota.caidaCuota(datosGuardados);
+        alert('No se encontraron simulaciones previas');
+    } 
+    else {
+        calcularCuota(datosGuardados);
         datosForm.reset();
     }
 })
 
+const criptoYa = "https://criptoya.com/api/dolar";
 
-//backup
+const dolar = document.createElement("section");
 
-/* const monto = document.getElementById('monto');
-const plazo = document.getElementById('plazo');
-const tna = document.getElementById('tna');
-const calcular = document.getElementById('calcular');
-const llenarTabla = document.querySelector('#lista_tabla tbody');
+setInterval( ()=> {
+    fetch(criptoYa)
+        .then(response => response.json())
+        .then(({blue, ccb, ccl, mep, oficial, solidario}) => {
+            dolar.innerHTML = `
+            <h2>Tipos de Dolar: </h2>
+            <p>Dolar Oficial: ${oficial} </p>
+            <p>Dolar Solidario: ${solidario} </p>
+            <p>Dolar MEP: ${mep} </p>
+            <p>Dolar CCL: ${ccl} </p>
+            <p>Dolar Ccb: ${ccb} </p>
+            <p>Dolar Blue: ${blue} </p>
+            `
+        })
+        .catch(error => console.error(error))
+}, 3000)
 
-calcular.addEventListener('click', () => {
-    calcularCuota(monto.value, tna.value, plazo.value);
-})
-
-function calcularCuota(monto, tna, plazo)  {
-
-    while(llenarTabla.firstChild){
-        llenarTabla.removeChild(llenarTabla.firstChild);
-    }
-
-    let fechas = [];
-    let fechaActual = Date.now();
-    let mes_actual = moment(fechaActual);
-    mes_actual.add(1, 'month');    
-
-    let pagoInteres=0, pagoCapital = 0, cuota = 0;
-
-    cuota = monto * (Math.pow(1+tna/100, plazo)*tna/100)/(Math.pow(1+tna/100, plazo)-1);
-
-    for(let i = 1; i <= plazo; i++) {
-
-        pagoInteres = parseFloat(monto*(tna/100));
-        pagoCapital = cuota - pagoInteres;
-        monto = parseFloat(monto-pagoCapital);
-
-        //Formato fechas
-        fechas[i] = mes_actual.format('DD-MM-YYYY');
-        mes_actual.add(1, 'month');
-
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td>${fechas[i]}</td>
-            <td>${cuota.toFixed(2)}</td>
-            <td>${pagoCapital.toFixed(2)}</td>
-            <td>${pagoInteres.toFixed(2)}</td>
-            <td>${monto.toFixed(2)}</td>
-        `;
-        llenarTabla.appendChild(fila)
-    }
-} */
