@@ -270,9 +270,11 @@ ultima.addEventListener('click', () => {
 
     if (!datosGuardados) {
         alert('No se encontraron simulaciones previas');
-    } 
-    else {
-        calcularCuota(datosGuardados);
+    } else {
+        const calcularCuota = new prestamo (datosGuardados.monto, datosGuardados.tna, datosGuardados.plazo)
+        calcularCuota.cuotaConIva()
+        calcularCuota.cuotaSinIva()
+        calcularCuota.caidaCuota();
         datosForm.reset();
     }
 })
@@ -281,10 +283,17 @@ const criptoYa = "https://criptoya.com/api/dolar";
 
 const dolar = document.createElement("section");
 
-setInterval( ()=> {
+setInterval(() => {
     fetch(criptoYa)
         .then(response => response.json())
-        .then(({blue, ccb, ccl, mep, oficial, solidario}) => {
+        .then(({
+            blue,
+            ccb,
+            ccl,
+            mep,
+            oficial,
+            solidario
+        }) => {
             dolar.innerHTML = `
             <h2>Tipos de Dolar: </h2>
             <p>Dolar Oficial: ${oficial} </p>
@@ -297,4 +306,6 @@ setInterval( ()=> {
         })
         .catch(error => console.error(error))
 }, 3000)
+
+div.append(dolar);
 
