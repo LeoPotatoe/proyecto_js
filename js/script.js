@@ -157,9 +157,10 @@ ultima.addEventListener('click', () => {
 
 //ENTREGA FINAL
 
+const iva = 0.21;
 class prestamo {
     constructor(monto, tna, plazo) {
-        this.monto = parseFloat(monto);
+        this.monto = parseInt(monto);
         this.tna = parseFloat(tna / 100);
         this.plazo = parseInt(plazo);
 
@@ -175,29 +176,34 @@ class prestamo {
         let mes_actual = moment(fechaActual);
         mes_actual.add(1, "month");
 
-        let pagoInteres = 0,
-            pagoCapital = 0,
-            cuota = 0;
+        let interes = 0;
+        let amortizacion = 0;
+        let cuotaIva = 0;
+        let impuesto = 0;
+        let cuota = 0;
 
-        cuota = this.monto * (Math.pow(1 + (this.tna / 100), this.plazo) * (this.tna / 100)) / (Math.pow(1 + (this.tna / 100), this.plazo) - 1);
+        cuotaIva = ((this.monto * (((this.tna*(1+iva)) / 12))) / (1 - ((1 + (this.tna*(1+iva)) / 12)) ** -this.plazo));
+        cuota = ((this.monto * ((this.tna / 12))) / (1 - ((1 + this.tna / 12)) ** -this.plazo));
 
         for (let i = 1; i <= this.plazo; i++) {
 
-            pagoInteres = parseFloat(this.monto * (this.tna / 100));
-            pagoCapital = cuota - pagoInteres;
-            this.monto = parseFloat(this.monto - pagoCapital);
+            interes = (this.monto * (this.tna / 12));
+            impuesto = (interes * iva)
+            amortizacion = cuotaIva - interes - impuesto;
+            this.monto = parseFloat(this.monto - amortizacion);
 
-            fechas[i] = mes_actual.format('DD-MM-YYYY');
+            fechas[i] = mes_actual.format('MM-YYYY');
             mes_actual.add(1, "month");
 
             const fila = document.createElement('tr');
             fila.innerHTML = `
-<td>${fechas[i]}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${pagoCapital.toFixed(2)}</td>
-<td>${pagoInteres.toFixed(2)}</td>
-<td>${this.monto.toFixed(2)}</td>
-`;
+                <td>${fechas[i]}</td>
+                <td>${cuotaIva.toFixed(2)}</td>
+                <td>${amortizacion.toFixed(2)}</td>
+                <td>${interes.toFixed(2)}</td>
+                <td>${impuesto.toFixed(2)}</td>
+                <td>${this.monto.toFixed(2)}</td>
+                `;
             llenarTabla.appendChild(fila)
         }
     }
@@ -216,14 +222,12 @@ calcular.addEventListener('click', () => {
     const tna = document.getElementById("tna").value;
 
     const calcularCuota = new prestamo(monto, tna, plazo);
-
     console.log(calcularCuota)
+
     calcularCuota.caidaCuota()
     datosForm.reset();
 
     localStorage.setItem("pp", JSON.stringify(calcularCuota));
-    console.log(datosForm)
-    
 })
 
 reset.addEventListener('click', () => {
@@ -233,7 +237,7 @@ reset.addEventListener('click', () => {
 ultima.addEventListener('click', () => {
     let datosGuardados = JSON.parse(localStorage.getItem("pp"));
     const calcularCuota = new prestamo(datosGuardados.monto, datosGuardados.tna, datosGuardados.plazo)
-    console.log(calcularCuota);
+    /* console.log(calcularCuota); */
 
     if (!datosGuardados) {
         alert("No se encontraron simulaciones previas");
